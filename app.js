@@ -30,9 +30,13 @@ User.sync().then(() => {
 
 var GitHubStrategy = require('passport-github2').Strategy;
 
-// TODO(yamatatsu): change secret file
-var GITHUB_CLIENT_ID = '2216dbdb67f6d95d8882';
-var GITHUB_CLIENT_SECRET = 'a8ebc4bc8b29a16129c6ddd2ca3d2978d6ee39fa';
+var secretsJson = require('./secrets.json');
+
+// secretsJson があるときはローカルでの実行時のみ。 .gitignore に追加されているため
+var GITHUB_CLIENT_ID =
+  process.env.GITHUB_CLIENT_ID || secretsJson.GITHUB_CLIENT_ID;
+var GITHUB_CLIENT_SECRET =
+  process.env.GITHUB_CLIENT_SECRET || secretsJson.GITHUB_CLIENT_SECRET;
 
 passport.serializeUser(function (user, done) {
   done(null, user);
@@ -47,7 +51,10 @@ passport.use(
     {
       clientID: GITHUB_CLIENT_ID,
       clientSecret: GITHUB_CLIENT_SECRET,
-      callbackURL: 'http://localhost:8000/auth/github/callback',
+      // callbackURL: 'http://localhost:8000/auth/github/callback',
+      callbackURL: process.env.HEROKU_URL
+        ? process.env.HEROKU_URL + 'auth/github/callback'
+        : 'http://localhost:8000/auth/github/callback',
     },
     function (accessToken, refreshToken, profile, done) {
       process.nextTick(function () {
