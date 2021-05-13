@@ -30,13 +30,32 @@ User.sync().then(() => {
 
 var GitHubStrategy = require('passport-github2').Strategy;
 
-var secretsJson = require('./secrets.json');
+const Fs = require('fs');
 
-// secretsJson があるときはローカルでの実行時のみ。 .gitignore に追加されているため
-var GITHUB_CLIENT_ID =
-  process.env.GITHUB_CLIENT_ID || secretsJson.GITHUB_CLIENT_ID;
-var GITHUB_CLIENT_SECRET =
-  process.env.GITHUB_CLIENT_SECRET || secretsJson.GITHUB_CLIENT_SECRET;
+function exists(path) {
+  try {
+    Fs.access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+const Path = require('path');
+const url = Path.join('./', 'secrets.json');
+
+var GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
+var GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
+
+var isExisted = exists(url);
+if (isExisted) {
+  // secretsJson があるときはローカルでの実行時のみ。 .gitignore に追加されているため
+  var secretsJson = require('./secrets.json');
+  var GITHUB_CLIENT_ID =
+    process.env.GITHUB_CLIENT_ID || secretsJson.GITHUB_CLIENT_ID;
+  var GITHUB_CLIENT_SECRET =
+    process.env.GITHUB_CLIENT_SECRET || secretsJson.GITHUB_CLIENT_SECRET;
+}
 
 passport.serializeUser(function (user, done) {
   done(null, user);
