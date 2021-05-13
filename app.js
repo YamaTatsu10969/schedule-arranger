@@ -30,16 +30,7 @@ User.sync().then(() => {
 
 var GitHubStrategy = require('passport-github2').Strategy;
 
-const { promises: Fs } = require('fs');
-
-async function exists(path) {
-  try {
-    await Fs.access(path);
-    return true;
-  } catch {
-    return false;
-  }
-}
+const { promises: Fs, existsSync } = require('fs');
 
 const Path = require('path');
 const url = Path.join('./', 'secrets.json');
@@ -48,7 +39,7 @@ const url = Path.join('./', 'secrets.json');
 var GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 var GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
-var isExisted = exists(url);
+var isExisted = existsSync(url);
 if (isExisted) {
   console.info('*********  開発環境  *********');
   var secretsJson = require('./secrets.json');
@@ -57,7 +48,7 @@ if (isExisted) {
   var GITHUB_CLIENT_SECRET =
     process.env.GITHUB_CLIENT_SECRET || secretsJson.GITHUB_CLIENT_SECRET;
 } else {
-  console.info('*********  Heroku  ***********');
+  console.info('*********  Heroku ***********');
 }
 passport.serializeUser(function (user, done) {
   done(null, user);
