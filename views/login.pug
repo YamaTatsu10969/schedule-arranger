@@ -1,6 +1,4 @@
 extends layout
 
 block content
-  a(href="/auth/github") Login Using GitHub Auth
-  if user
-     p #{user.username} are logging in.
+  a(href="/auth/github").btn.btn-info.my-3 GitHubでログイン

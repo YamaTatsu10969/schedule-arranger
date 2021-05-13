@@ -95,6 +95,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var global = Function('return this;')();
+global.jQuery = jquery__WEBPACK_IMPORTED_MODULE_0___default.a;
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('.availability-toggle-button').each(function (i, e) {
   var button = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e);
   button.click(function () {
@@ -109,6 +111,9 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()('.availability-toggle-button').eac
       button.data('availability', data.availability);
       var availabilityLabels = ['欠', '？', '出'];
       button.text(availabilityLabels[data.availability]);
+      var buttonStyles = ['btn-danger', 'btn-secondary', 'btn-success'];
+      button.removeClass('btn-danger btn-secondary btn-success');
+      button.addClass(buttonStyles[data.availability]);
     });
   });
 });
