@@ -30,17 +30,11 @@ User.sync().then(() => {
 
 var GitHubStrategy = require('passport-github2').Strategy;
 
-const { promises: Fs, existsSync } = require('fs');
-
-const Path = require('path');
-const url = Path.join('./', 'secrets.json');
-
 // secretsJson があるときはローカルでの実行時のみ。 .gitignore に追加されているため
 var GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 var GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
-var isExisted = existsSync(url);
-if (isExisted) {
+if (!process.env.GITHUB_CLIENT_ID) {
   console.info('*********  開発環境  *********');
   var secretsJson = require('./secrets.json');
   var GITHUB_CLIENT_ID =
@@ -63,7 +57,6 @@ passport.use(
     {
       clientID: GITHUB_CLIENT_ID,
       clientSecret: GITHUB_CLIENT_SECRET,
-      // callbackURL: 'http://localhost:8000/auth/github/callback',
       callbackURL: process.env.HEROKU_URL
         ? process.env.HEROKU_URL + 'auth/github/callback'
         : 'http://localhost:8000/auth/github/callback',
