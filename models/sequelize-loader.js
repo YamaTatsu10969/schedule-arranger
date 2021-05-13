@@ -5,6 +5,7 @@ const sequelize = new Sequelize({
   database:
     process.env.DATABASE_URL ||
     'postgres://postgres:postgres@db/schedule_arranger',
+  dialect: 'postgres',
   dialectOptions: {
     ssl: {
       require: true,
